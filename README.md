@@ -22,7 +22,7 @@ RecoverAI solves this by chaining three distinct intelligence layers:
 ### 3. Database ER Diagram
 ![ER Diagram](apps/web/public/images/er-diagram.png)
 
-> **Note on Webhooks:** The architecture diagram illustrates the production integration point via Razorpay Webhooks. For the scope of this hackathon demo, the system is triggered via synthetic payment events to allow isolated, end-to-end evaluation without relying on external webhooks.
+> **Note on Webhooks:** The architecture diagram illustrates the production integration point via Razorpay Webhooks. The system fully implements a production-ready `/api/webhooks/razorpay` ingestion endpoint with HMAC signature validation and idempotency checks. However, for demo purposes, the UI triggers the pipeline via synthetic batches to allow rapid end-to-end evaluation.
 
 ## Key Features
 - **Statistical ML Prediction:** FastAPI microservice serving Logistic Regression inference.
@@ -30,6 +30,7 @@ RecoverAI solves this by chaining three distinct intelligence layers:
 - **Deterministic Safety Policy:** Impenetrable rule engine capable of rejecting unsafe AI decisions.
 - **Synthetic Payment Simulation:** Procedurally generated training and testing data free from PII.
 - **Chronological Audit Trail:** Immutable JSON tracking of the entire ML -> AI -> Policy lifecycle.
+- **Production Webhook Integration:** Validated Razorpay webhook ingestion endpoint with crypto HMAC signature verification and idempotency tracking.
 - **Full-Stack Visualization:** Next.js App Router dashboard rendering real-time performance and audit timelines.
 
 ## Tech Stack
@@ -112,5 +113,4 @@ cd services/ml && pytest tests/
 
 ## Limitations & Future Work
 - **Synthetic Data:** The system currently relies on synthetic datasets. Real-world payments experience concept drift and complex seasonality.
-- **Sequential Simulation:** The current simulation processes batches sequentially to avoid SQLite/DB deadlocks in dev, though the architecture supports asynchronous queueing.
-- **Future Integration:** Adding robust queueing (e.g., BullMQ) and tying the `POST /evaluate` endpoint to real Razorpay Webhooks.
+- **Future Integration:** Adding robust queueing (e.g., BullMQ) to handle high-throughput concurrent webhook ingestion at scale.
