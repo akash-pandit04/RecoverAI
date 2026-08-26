@@ -77,7 +77,7 @@ python -m venv venv
 venv\Scripts\activate   # (Windows)
 # source venv/bin/activate (Mac/Linux)
 pip install -r requirements.txt
-uvicorn services.ml.app.main:app --port 8000
+uvicorn app.main:app --port 8000
 ```
 
 ### 3. Backend & Frontend Startup
