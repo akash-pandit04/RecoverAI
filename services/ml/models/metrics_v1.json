@@ -1,0 +1,61 @@
+{
+    "roc_auc": 0.7888647194727667,
+    "precision": 0.6212962962962963,
+    "recall": 0.45553292600135775,
+    "f1_score": 0.5256560908734822,
+    "brier_score": 0.16310766588738929,
+    "class_distribution_test_set": {
+        "0": 0.7054,
+        "1": 0.2946
+    },
+    "feature_importance": [
+        {
+            "feature": "failure_reason_bank_timeout",
+            "coefficient": 2.8783004115333917
+        },
+        {
+            "feature": "failure_reason_temporary_bank_error",
+            "coefficient": 2.6020488547460174
+        },
+        {
+            "feature": "failure_reason_network_error",
+            "coefficient": 2.4514026042923556
+        },
+        {
+            "feature": "failure_reason_insufficient_balance",
+            "coefficient": 1.2194755843381047
+        },
+        {
+            "feature": "retry_count",
+            "coefficient": -0.4467229430469625
+        },
+        {
+            "feature": "failure_reason_invalid_payment_details",
+            "coefficient": -0.43863887656070905
+        },
+        {
+            "feature": "customer_success_rate",
+            "coefficient": 0.41235051888547425
+        },
+        {
+            "feature": "amount",
+            "coefficient": -0.16603922548768302
+        },
+        {
+            "feature": "payment_method_NETBANKING",
+            "coefficient": 0.1091466053492603
+        },
+        {
+            "feature": "day_of_week",
+            "coefficient": 0.024053802733358453
+        },
+        {
+            "feature": "payment_method_UPI",
+            "coefficient": 0.010221533517552282
+        },
+        {
+            "feature": "hour_of_day",
+            "coefficient": 0.004533593103246453
+        }
+    ]
+}

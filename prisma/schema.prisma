@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Merchant {
+  id        String     @id @default(uuid())
+  name      String
+  customers Customer[]
+}
+
+model Customer {
+  id                 String    @id @default(uuid())
+  merchantId         String
+  merchant           Merchant  @relation(fields: [merchantId], references: [id])
+  historySuccessRate Float     @default(1.0)
+  payments           Payment[]
+}
+
+model Payment {
+  id             String           @id @default(uuid())
+  customerId     String
+  customer       Customer         @relation(fields: [customerId], references: [id])
+  amount         Decimal          @db.Decimal(10, 2)
+  status         String           // PENDING, FAILED, SUCCESS
+  attempts       PaymentAttempt[]
+  recoveryCases  RecoveryCase[]
+}
+
+model PaymentAttempt {
+  id            String   @id @default(uuid())
+  paymentId     String
+  payment       Payment  @relation(fields: [paymentId], references: [id])
+  timestamp     DateTime @default(now())
+  method        String
+  failureReason String?
+}
+
+model RecoveryCase {
+  id                  String             @id @default(uuid())
+  paymentId           String             @unique
+  payment             Payment            @relation(fields: [paymentId], references: [id])
+  status              String             @default("OPEN") // OPEN, RECOVERED, ESCALATED, CLOSED
+  recoveryProbability Float?
+  actions             RecoveryAction[]
+  auditEvents         AuditEvent[]
+  modelPredictions    ModelPrediction[]
+}
+
+model RecoveryAction {
+  id             String       @id @default(uuid())
+  recoveryCaseId String
+  recoveryCase   RecoveryCase @relation(fields: [recoveryCaseId], references: [id])
+  actionType     String       // RETRY, MESSAGE, ESCALATE
+  status         String       // PENDING, EXECUTED, FAILED
+  timestamp      DateTime     @default(now())
+}
+
+model AuditEvent {
+  id             String       @id @default(uuid())
+  recoveryCaseId String
+  recoveryCase   RecoveryCase @relation(fields: [recoveryCaseId], references: [id])
+  event          String
+  details        Json?
+  timestamp      DateTime     @default(now())
+}
+
+model ModelPrediction {
+  id               String       @id @default(uuid())
+  paymentId        String
+  recoveryCaseId   String
+  recoveryCase     RecoveryCase @relation(fields: [recoveryCaseId], references: [id])
+  modelVersion     String
+  probability      Float
+  featuresSnapshot Json
+  timestamp        DateTime     @default(now())
+}
+
+model WebhookEvent {
+  id        String   @id @default(uuid())
+  eventId   String   @unique
+  payload   Json
+  processed Boolean  @default(false)
+  timestamp DateTime @default(now())
+}
