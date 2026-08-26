@@ -6,7 +6,8 @@ from contextlib import asynccontextmanager
 
 from .schemas import PredictionRequest, PredictionResponse
 
-MODEL_PATH = os.getenv("MODEL_PATH", "services/ml/models/baseline_logistic_v1.joblib")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODEL_PATH = os.getenv("MODEL_PATH", os.path.join(BASE_DIR, "models", "baseline_logistic_v1.joblib"))
 MODEL_VERSION = os.getenv("MODEL_VERSION", "baseline-logistic-v1")
 
 model_pipeline = None
