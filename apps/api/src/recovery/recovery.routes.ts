@@ -36,10 +36,10 @@ recoveryRouter.get('/cases', async (req, res) => {
     const cases = await prisma.recoveryCase.findMany({
       include: {
         payment: {
-          include: { attempts: true }
+          include: { attempts: { orderBy: { timestamp: 'asc' } } }
         },
-        actions: true,
-        auditEvents: { orderBy: { timestamp: 'desc' }, take: 1 }
+        actions: { orderBy: { timestamp: 'asc' } },
+        auditEvents: { orderBy: { timestamp: 'asc' } }
       },
       take: 50,
       orderBy: { id: 'desc' }
@@ -55,10 +55,10 @@ recoveryRouter.get('/cases/:id', async (req, res) => {
     const caseData = await prisma.recoveryCase.findUnique({
       where: { id: req.params.id },
       include: {
-        payment: { include: { attempts: true } },
-        actions: true,
+        payment: { include: { attempts: { orderBy: { timestamp: 'asc' } } } },
+        actions: { orderBy: { timestamp: 'asc' } },
         auditEvents: { orderBy: { timestamp: 'asc' } },
-        modelPredictions: true
+        modelPredictions: { orderBy: { timestamp: 'asc' } }
       }
     });
     if (!caseData) return res.status(404).json({ error: 'Not found' });

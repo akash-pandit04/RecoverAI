@@ -32,6 +32,8 @@ model Payment {
   status         String           // PENDING, FAILED, SUCCESS
   attempts       PaymentAttempt[]
   recoveryCases  RecoveryCase[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @default(now()) @updatedAt
 }
 
 model PaymentAttempt {
@@ -52,6 +54,8 @@ model RecoveryCase {
   actions             RecoveryAction[]
   auditEvents         AuditEvent[]
   modelPredictions    ModelPrediction[]
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @default(now()) @updatedAt
 }
 
 model RecoveryAction {
@@ -61,6 +65,8 @@ model RecoveryAction {
   actionType     String       // RETRY, MESSAGE, ESCALATE
   status         String       // PENDING, EXECUTED, FAILED
   timestamp      DateTime     @default(now())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now()) @updatedAt
 }
 
 model AuditEvent {

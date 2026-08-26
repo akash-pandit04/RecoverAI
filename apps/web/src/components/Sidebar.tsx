@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, FileText, PlaySquare, Network, LogOut, ArrowPathRoundedSquare } from 'lucide-react';
+import { Home, FileText, PlaySquare, Network, LogOut } from 'lucide-react';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -61,7 +61,7 @@ export function Sidebar() {
             
             <Link href="/architecture" className={getLinkClasses('/architecture')}>
               <Network className={getIconClasses('/architecture')} />
-              Architecture
+              Decision Pipeline
             </Link>
           </nav>
         </div>

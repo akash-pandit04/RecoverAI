@@ -1,4 +1,4 @@
-﻿# RecoverAI
+# RecoverAI
 
 An AI-driven Revenue Recovery Agent demonstrating how statistical Machine Learning and generative Language Models can securely assist fintech pipelines while being constrained by deterministic safety rules.
 
@@ -21,6 +21,8 @@ RecoverAI solves this by chaining three distinct intelligence layers:
 
 ### 3. Database ER Diagram
 ![ER Diagram](apps/web/public/images/er-diagram.png)
+
+> **Note on Webhooks:** The architecture diagram illustrates the production integration point via Razorpay Webhooks. For the scope of this hackathon demo, the system is triggered via synthetic payment events to allow isolated, end-to-end evaluation without relying on external webhooks.
 
 ## Key Features
 - **Statistical ML Prediction:** FastAPI microservice serving Logistic Regression inference.

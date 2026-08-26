@@ -4,12 +4,23 @@ import { PolicyEngine } from './policy/policy.engine';
 import { SyntheticPaymentProvider } from '../providers/payment.provider';
 import { RecoveryAgent } from './agent/recovery.agent';
 import { MockLLMProvider } from '../providers/llm/mock.llm.provider';
+import { OpenAILLMProvider } from '../providers/llm/openai.llm.provider';
 
 export class RecoveryService {
   private mlClient = new MLClient();
   private policyEngine = new PolicyEngine();
   private paymentProvider = new SyntheticPaymentProvider();
-  private recoveryAgent = new RecoveryAgent(new MockLLMProvider());
+  
+  private getLLMProvider() {
+    if (process.env.LLM_PROVIDER === 'openai') {
+      console.log('[RecoveryService] Using OpenAILLMProvider');
+      return new OpenAILLMProvider();
+    }
+    console.log('[RecoveryService] Using MockLLMProvider');
+    return new MockLLMProvider();
+  }
+  
+  private recoveryAgent = new RecoveryAgent(this.getLLMProvider());
 
 
   async evaluatePayment(paymentId: string) {
@@ -59,7 +70,7 @@ export class RecoveryService {
         failure_reason: failureReason,
         customer_success_rate: payment.customer.historySuccessRate,
         retry_count: Math.max(0, retryCount),
-        day_of_week: now.getDay(),
+        day_of_week: now.getDay() === 0 ? 6 : now.getDay() - 1,
         hour_of_day: now.getHours()
       });
 

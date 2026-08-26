@@ -59,7 +59,7 @@ export default async function Dashboard() {
             <TrendingUp className="w-6 h-6 text-indigo-600" />
             <h1 className="text-[26px] font-bold text-gray-900 tracking-tight">Overview</h1>
           </div>
-          <p className="text-gray-500 text-[14px]">Monitor AI-powered recovery performance in real-time</p>
+          <p className="text-gray-500 text-[14px]">Monitor AI-powered recovery performance</p>
         </div>
         <div className="flex items-center gap-4">
 
@@ -80,10 +80,7 @@ export default async function Dashboard() {
             </div>
           </div>
           <div className="text-[28px] font-bold text-gray-900 mb-2.5">₹{formatINR(metrics.recoveredRevenue)}</div>
-          <div className="flex items-center gap-1.5 text-[12px] mb-4">
-            <span className="text-emerald-600 font-bold flex items-center"><TrendingUp className="w-3 h-3 mr-0.5 stroke-[3]"/> 2.50%</span>
-            <span className="text-gray-400 font-medium">vs last 7 days</span>
-          </div>
+
           <div className="text-[11px] font-medium text-gray-500 pt-3 border-t border-gray-100/80">Attempted: ₹{formatINR(metrics.attemptedRevenue)}</div>
         </div>
 
@@ -95,10 +92,7 @@ export default async function Dashboard() {
             </div>
           </div>
           <div className="text-[28px] font-bold text-gray-900 mb-2.5">{metrics.paymentsRecovered}</div>
-          <div className="flex items-center gap-1.5 text-[12px] mb-4">
-            <span className="text-emerald-600 font-bold flex items-center"><TrendingUp className="w-3 h-3 mr-0.5 stroke-[3]"/> 2.56%</span>
-            <span className="text-gray-400 font-medium">vs last 7 days</span>
-          </div>
+
           <div className="text-[11px] font-medium text-gray-500 pt-3 border-t border-gray-100/80">Evaluated: {metrics.paymentsEvaluated}</div>
         </div>
 
@@ -110,11 +104,8 @@ export default async function Dashboard() {
             </div>
           </div>
           <div className="text-[28px] font-bold text-gray-900 mb-2.5">{(metrics.recoveryRate * 100).toFixed(1)}%</div>
-          <div className="flex items-center gap-1.5 text-[12px] mb-4">
-            <span className="text-emerald-600 font-bold flex items-center"><TrendingUp className="w-3 h-3 mr-0.5 stroke-[3]"/> 2.50%</span>
-            <span className="text-gray-400 font-medium">vs last 7 days</span>
-          </div>
-          <div className="text-[11px] font-medium text-gray-500 pt-3 border-t border-gray-100/80">Of evaluated failed payments</div>
+
+          <div className="text-[11px] font-medium text-gray-500 pt-3 border-t border-gray-100/80">(Recovered Payments ÷ Evaluated)</div>
         </div>
 
         <div className="bg-white rounded-[14px] shadow-sm border border-gray-200 p-5">
@@ -125,10 +116,7 @@ export default async function Dashboard() {
             </div>
           </div>
           <div className="text-[28px] font-bold text-gray-900 mb-2.5">{(metrics.averageRecoveryProbability * 100).toFixed(1)}%</div>
-          <div className="flex items-center gap-1.5 text-[12px] mb-4">
-            <span className="text-red-500 font-bold flex items-center"><TrendingUp className="w-3 h-3 mr-0.5 transform rotate-180 stroke-[3]"/> 3.20%</span>
-            <span className="text-gray-400 font-medium">vs last 7 days</span>
-          </div>
+
           <div className="text-[11px] font-medium text-gray-500 pt-3 border-t border-gray-100/80">Overall prediction average</div>
         </div>
       </div>
@@ -293,9 +281,27 @@ export default async function Dashboard() {
                 
                 const failureReason = getFailureReason(c);
                 
-                // Construct fake recommendation/decision based on action to match UI
-                const aiRec = `${lastAction} (${(prob + 0.09).toFixed(2)})`;
-                const policyDec = lastAction === 'ESCALATE' ? 'REJECTED' : 'APPROVED';
+                // Extract real AI recommendation and policy decision from audit events
+                const aiEvent = c.auditEvents?.find((e: any) => e.event === 'AI_RECOMMENDATION_GENERATED' || e.event === 'AI_RECOMMENDATION_REJECTED');
+                const policyEvent = c.auditEvents?.find((e: any) => e.event === 'POLICY_EVALUATED');
+                
+                let aiRec = 'AI UNAVAILABLE';
+                if (aiEvent?.details?.recommendation?.recommended_action) {
+                   aiRec = `${aiEvent.details.recommendation.recommended_action} (${(aiEvent.details.recommendation.confidence || 0).toFixed(2)})`;
+                } else if (aiEvent?.details?.aiAction) {
+                   aiRec = `${aiEvent.details.aiAction} (N/A)`;
+                }
+
+                let policyDec = 'NOT REACHED';
+                if (policyEvent?.details?.decision) {
+                   policyDec = policyEvent.details.decision.allowed ? 'APPROVED' : 'REJECTED';
+                }
+                
+                let aiColor = 'text-gray-500';
+                if (aiRec.includes('RETRY')) aiColor = 'text-emerald-600';
+                if (aiRec.includes('MESSAGE')) aiColor = 'text-blue-600';
+                if (aiRec.includes('ESCALATE')) aiColor = 'text-red-500';
+
                 const policyColor = policyDec === 'APPROVED' ? 'bg-emerald-50 text-emerald-600 border-emerald-100/50' : 'bg-red-50 text-red-600 border-red-100/50';
 
                 return (
@@ -309,7 +315,7 @@ export default async function Dashboard() {
                         {prob.toFixed(2)}
                       </div>
                     </td>
-                    <td className={`px-5 py-4 font-bold ${actionColor} text-[10.5px]`}>{aiRec}</td>
+                    <td className={`px-5 py-4 font-bold ${aiColor} text-[10.5px]`}>{aiRec}</td>
                     <td className="px-5 py-4 text-center">
                       <span className={`px-2.5 py-1 rounded-[6px] text-[10px] font-bold border ${policyColor}`}>
                         {policyDec}

@@ -9,14 +9,15 @@
     "services/*"
   ],
   "scripts": {
-    "dev": "npm run dev --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present",
+    "dev": "concurrently \"npm run dev -w apps/api\" \"npm run dev -w apps/web\"",
+    "build": "npm run build -w packages/shared && npm run build -w apps/api && npm run build -w apps/web",
+    "test": "npm run test -w apps/api && npm run test -w apps/web",
+    "lint": "npm run lint -w apps/web",
     "db:generate": "prisma generate",
     "db:push": "prisma db push"
   },
   "devDependencies": {
+    "concurrently": "^10.0.5",
     "prisma": "^5.14.0",
     "typescript": "^5.4.5"
   },

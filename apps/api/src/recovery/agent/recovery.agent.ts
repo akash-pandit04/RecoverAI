@@ -9,7 +9,12 @@ export class RecoveryAgent {
     // Optimization: Do not call LLM unnecessarily for fatal errors
     if (POLICY_CONFIG.FATAL_FAILURE_REASONS.includes(context.payment.failureReason)) {
       console.log('[RecoveryAgent] Skipping LLM for fatal failure reason.');
-      return null;
+      return {
+        recommended_action: 'ESCALATE',
+        confidence: 1.0,
+        reason: 'Fatal failure reason detected, bypassing LLM.',
+        customer_message: null
+      };
     }
 
     try {

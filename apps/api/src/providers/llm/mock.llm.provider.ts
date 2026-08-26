@@ -20,14 +20,14 @@ export class MockLLMProvider implements LLMProvider {
       };
     }
 
-    if (prob >= 0.7) {
+    if (prob >= 0.60) {
       return {
         recommended_action: 'RETRY',
         confidence: 0.88,
         reason: `High probability (${prob.toFixed(2)}) for ${reason}. Retrying is optimal.`,
         customer_message: null
       };
-    } else if (prob >= 0.4) {
+    } else if (prob >= 0.35) {
       return {
         recommended_action: 'MESSAGE',
         confidence: 0.75,

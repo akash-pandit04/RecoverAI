@@ -128,10 +128,10 @@ export default function SimulationPage() {
                     <div className="text-2xl font-bold text-gray-900">{result.recovered_payments}</div>
                   </div>
 
-                  <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                  <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm" title="Recovered payments ÷ evaluated failed payments">
                     <div className="flex items-center gap-2 text-gray-500 mb-2">
                       <TrendingUp className="w-4 h-4 text-purple-500" />
-                      <span className="text-[11px] font-bold tracking-wide uppercase">Recovery Rate</span>
+                      <span className="text-[11px] font-bold tracking-wide uppercase">Payment Recovery Rate</span>
                     </div>
                     <div className="text-2xl font-bold text-gray-900">{(result.recovery_rate * 100).toFixed(1)}%</div>
                   </div>

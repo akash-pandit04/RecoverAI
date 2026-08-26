@@ -1,7 +1,7 @@
 export default function ArchitecturePage() {
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-20">
-      <h1 className="text-3xl font-semibold text-gray-900">System Architecture</h1>
+      <h1 className="text-3xl font-semibold text-gray-900">Recovery Decision Pipeline</h1>
       
       <div className="prose max-w-none text-gray-700">
         <p className="text-lg">
