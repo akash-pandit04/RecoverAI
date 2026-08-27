@@ -114,3 +114,12 @@ cd services/ml && pytest tests/
 ## Limitations & Future Work
 - **Synthetic Data:** The system currently relies on synthetic datasets. Real-world payments experience concept drift and complex seasonality.
 - **Future Integration:** Adding robust queueing (e.g., BullMQ) to handle high-throughput concurrent webhook ingestion at scale.
+
+## Project Demonstration
+
+> A short walkthrough of RecoverAI — from failed payment analysis to ML prediction, AI recommendation, policy validation, and recovery action.
+
+[![Watch RecoverAI Demo](https://img.youtube.com/vi/oD29MH5OMNo/maxresdefault.jpg)](https://www.youtube.com/watch?v=oD29MH5OMNo)
+
+**[▶ Watch the RecoverAI Demo](https://www.youtube.com/watch?v=oD29MH5OMNo)**
+
